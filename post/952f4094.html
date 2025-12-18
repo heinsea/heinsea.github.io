@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="如何解决数据量较大时，图表的视觉展示出现的性能问题？ 1.提升图表控件性能。（UI，绘图） 重写控件 2.对数据进行采样，保留特征点。（减少数据） 使用采样算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大数据量下的图表显示">
+<meta property="og:url" content="https://www.heinsea.cn/post/952f4094.html">
+<meta property="og:site_name" content="蓝色风信子">
+<meta property="og:description" content="如何解决数据量较大时，图表的视觉展示出现的性能问题？ 1.提升图表控件性能。（UI，绘图） 重写控件 2.对数据进行采样，保留特征点。（减少数据） 使用采样算法">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-04-09T22:43:12.000Z">
+<meta property="article:modified_time" content="2025-12-18T14:52:46.536Z">
+<meta property="article:author" content="heinsea">
+<meta property="article:tag" content="小说 随想 heinsea">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>大数据量下的图表显示</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="蓝色风信子" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/post/c5f84c30.html"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/post/de6c51fd.html"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.heinsea.cn/post/952f4094.html"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.heinsea.cn/post/952f4094.html&text=大数据量下的图表显示"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.heinsea.cn/post/952f4094.html&title=大数据量下的图表显示"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.heinsea.cn/post/952f4094.html&is_video=false&description=大数据量下的图表显示"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=大数据量下的图表显示&body=Check out this article: https://www.heinsea.cn/post/952f4094.html"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.heinsea.cn/post/952f4094.html&title=大数据量下的图表显示"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.heinsea.cn/post/952f4094.html&title=大数据量下的图表显示"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.heinsea.cn/post/952f4094.html&title=大数据量下的图表显示"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.heinsea.cn/post/952f4094.html&title=大数据量下的图表显示"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.heinsea.cn/post/952f4094.html&name=大数据量下的图表显示&description=&lt;p&gt;如何解决数据量较大时，图表的视觉展示出现的性能问题？&lt;/p&gt;
+&lt;p&gt;1.提升图表控件性能。（UI，绘图）&lt;/p&gt;
+&lt;p&gt;重写控件&lt;/p&gt;
+&lt;p&gt;2.对数据进行采样，保留特征点。（减少数据）&lt;/p&gt;
+&lt;p&gt;使用采样算法&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.heinsea.cn/post/952f4094.html&t=大数据量下的图表显示"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        大数据量下的图表显示
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">heinsea</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-04-09T22:43:12.000Z" class="dt-published" itemprop="datePublished">2021-04-09</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>如何解决数据量较大时，图表的视觉展示出现的性能问题？</p>
+<p>1.提升图表控件性能。（UI，绘图）</p>
+<p>重写控件</p>
+<p>2.对数据进行采样，保留特征点。（减少数据）</p>
+<p>使用采样算法</p>
+<span id="more"></span>
+<p>对于间隔一定的时序数据来说，通常以曲线图的方式来展现数据随时间变化的线性关系，进而通过视觉方式来直观判断整个采集过程中数据的波动情况，如上升，下降，陡然跳变等。</p>
+<p><strong>均匀采样</strong>。这是最容易想到的办法。从所有数据中，等间隔地获取我们想要的数据，然后将其他数据直接丢弃掉。但是，有一个问题：我们无法判断所丢弃的数据中是否存在特征点或异常值，数据在图表上的曲线“形状”被改变了，那些波峰，波谷，跳变可能被抹去了。显然，这样的结果不是我们所想要的。</p>
+<p><strong>RDP算法（拉默·道格拉斯·普克算法）</strong><sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>。通常，这种算法广泛地用于GIS中轨迹的压缩，保留原始曲线图形的形状。压缩曲线，降低绘制精度，减少点的数量，保留曲线形状，这是它的用途。我们的目的是什么呢？在保留图表上曲线形状的情况下，尽可能降低点的数量，从而解决图表控件因数据量太大所造成的性能问题。将它作为数据采样算法，应用到实际图表展示中，效果似乎也不错。但它也有一个问题：它的阈值设定是根据曲线波动的幅度来确定的，我们无法预测下一条曲线的波动情况进而确定采样算法的阈值，或者说在应用到图表展示时比较困难。它就像“玄学调参”般无法去确定一个具体的阈值设定。因为采集的数据在未展示时，必须再次通过计算方式来动态地判断它的局部或整体的波动状况，从而引入更多的不确定性。不确定意味着更多的时间，性能的下降。</p>
+<p><strong>LTTB算法</strong><sup class="footnote-ref"><a href="#fn2" id="fnref2">[2]</a></sup><sup class="footnote-ref"><a href="#fn3" id="fnref3">[3]</a></sup><sup class="footnote-ref"><a href="#fn4" id="fnref4">[4]</a></sup>。根据这篇博客<sup class="footnote-ref"><a href="#fn5" id="fnref5">[5]</a></sup>的介绍，LTTB算法主要源于Visvalingam-Whyatt算法<sup class="footnote-ref"><a href="#fn6" id="fnref6">[6]</a></sup><sup class="footnote-ref"><a href="#fn7" id="fnref7">[7]</a></sup>。该算法能保留数据在图表坐标上的“形状”特征，最重要的是，算法的阈值设定是根据曲线预期得到的点的数量来确定。也就是说，我们可以在设定指定个数点的情况下，尽可能的保留原始数据在图表上的视觉特征。而数据采样的预期数目又可以根据图表在屏幕上的像素来确定。根据图像信号采样中的奈奎斯特频率<sup class="footnote-ref"><a href="#fn8" id="fnref8">[8]</a></sup><sup class="footnote-ref"><a href="#fn9" id="fnref9">[9]</a></sup>来说，绘制任何大于屏幕分辨率1/2的点数，是一种浪费<sup class="footnote-ref"><a href="#fn10" id="fnref10">[10]</a></sup>。这样，我们便可以通过图表在显示界面的实际宽度，进而确定数据的采样个数，得到一个相对比较好的图表显示效果。</p>
+<p>如果你使用python，这里<sup class="footnote-ref"><a href="#fn11" id="fnref11">[11]</a></sup>也有对应的算法。</p>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>Ramer–Douglas–Peucker algorithm.<br>
+<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm">https://en.wikipedia.org/wiki/Ramer–Douglas–Peucker_algorithm</a> <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn2" class="footnote-item"><p>【时间序列降维】一种领先国内的降维算法—LTTB降维拟合算法.<br>
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37960007/article/details/109445735?spm=1001.2014.3001.5501">https://blog.csdn.net/qq_37960007/article/details/109445735?spm=1001.2014.3001.5501</a> <a href="#fnref2" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn3" class="footnote-item"><p>LTTB 算法作者的 Github 代码示例.<br>
+<a target="_blank" rel="noopener" href="https://github.com/sveinn-steinarsson/flot-downsample/">https://github.com/sveinn-steinarsson/flot-downsample/</a> <a href="#fnref3" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn4" class="footnote-item"><p>Downsampling Time Series for Visual Representation.<br>
+<a target="_blank" rel="noopener" href="https://skemman.is/handle/1946/15343">https://skemman.is/handle/1946/15343</a> <a href="#fnref4" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn5" class="footnote-item"><p>WPF 折线/坐标点绘制 Largest-Triangle-Three-Buckets算法.<br>
+<a target="_blank" rel="noopener" href="https://www.cnblogs.com/T-ARF/p/14624698.html">https://www.cnblogs.com/T-ARF/p/14624698.html</a> <a href="#fnref5" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn6" class="footnote-item"><p>Visvalingam–Whyatt algorithm.<br>
+<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Visvalingam%E2%80%93Whyatt_algorithm">https://en.wikipedia.org/wiki/Visvalingam–Whyatt_algorithm</a> <a href="#fnref6" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn7" class="footnote-item"><p>常用的地图数据概化算法：Douglas-Peucker 与 Visvalingam-Whyatt.<br>
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_41310868/article/details/114500282">https://blog.csdn.net/sinat_41310868/article/details/114500282</a> <a href="#fnref7" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn8" class="footnote-item"><p>Nyquist frequency.<br>
+<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Nyquist_frequency">https://en.wikipedia.org/wiki/Nyquist_frequency</a> <a href="#fnref8" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn9" class="footnote-item"><p>奈奎斯特采样定理—以二维图像为例.<br>
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36763031/article/details/104020114">https://blog.csdn.net/qq_36763031/article/details/104020114</a> <a href="#fnref9" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn10" class="footnote-item"><p>Most performant way to graph thousands of data points with WPF?.<br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/952657/most-performant-way-to-graph-thousands-of-data-points-with-wpf">https://stackoverflow.com/questions/952657/most-performant-way-to-graph-thousands-of-data-points-with-wpf</a> <a href="#fnref10" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn11" class="footnote-item"><p>lttb Python包.<br>
+<a target="_blank" rel="noopener" href="https://pypi.org/project/lttb/">https://pypi.org/project/lttb/</a> <a href="#fnref11" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.heinsea.cn/post/952f4094.html"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.heinsea.cn/post/952f4094.html&text=大数据量下的图表显示"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.heinsea.cn/post/952f4094.html&title=大数据量下的图表显示"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.heinsea.cn/post/952f4094.html&is_video=false&description=大数据量下的图表显示"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=大数据量下的图表显示&body=Check out this article: https://www.heinsea.cn/post/952f4094.html"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.heinsea.cn/post/952f4094.html&title=大数据量下的图表显示"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.heinsea.cn/post/952f4094.html&title=大数据量下的图表显示"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.heinsea.cn/post/952f4094.html&title=大数据量下的图表显示"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.heinsea.cn/post/952f4094.html&title=大数据量下的图表显示"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.heinsea.cn/post/952f4094.html&name=大数据量下的图表显示&description=&lt;p&gt;如何解决数据量较大时，图表的视觉展示出现的性能问题？&lt;/p&gt;
+&lt;p&gt;1.提升图表控件性能。（UI，绘图）&lt;/p&gt;
+&lt;p&gt;重写控件&lt;/p&gt;
+&lt;p&gt;2.对数据进行采样，保留特征点。（减少数据）&lt;/p&gt;
+&lt;p&gt;使用采样算法&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.heinsea.cn/post/952f4094.html&t=大数据量下的图表显示"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2025
+    heinsea
+  </div>
+  <div class="footer-left">
+    
+    
+    <li><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">鄂ICP备2020016252号</a></li>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'heinsea/heinsea.github.io';
+      var utterances_issue_term = 'url';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>

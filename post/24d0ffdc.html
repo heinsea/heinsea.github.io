@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="人在无聊的时候，总会喜欢翻出以前的东西看看。以前买的树莓派吃灰了好久，于是，没有需求也想创造需求，给吃灰的东西找找用途，让它看起来有点作用。 吃灰树莓派，吃灰SD卡读取器，吃灰瑕疵屏幕面板……折腾了一下午，尝试烧录系统，HDMI连接，SSH远程登录，VNC查看，镜像源配置，VS Code Server SSH登录配置，然后继续吃灰。 为了发挥作用，来创造某种需求，结果却发现自己并不需要，这其中折腾">
+<meta property="og:type" content="article">
+<meta property="og:title" content="吃灰的树莓派">
+<meta property="og:url" content="https://www.heinsea.cn/post/24d0ffdc.html">
+<meta property="og:site_name" content="蓝色风信子">
+<meta property="og:description" content="人在无聊的时候，总会喜欢翻出以前的东西看看。以前买的树莓派吃灰了好久，于是，没有需求也想创造需求，给吃灰的东西找找用途，让它看起来有点作用。 吃灰树莓派，吃灰SD卡读取器，吃灰瑕疵屏幕面板……折腾了一下午，尝试烧录系统，HDMI连接，SSH远程登录，VNC查看，镜像源配置，VS Code Server SSH登录配置，然后继续吃灰。 为了发挥作用，来创造某种需求，结果却发现自己并不需要，这其中折腾">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-05T18:20:02.000Z">
+<meta property="article:modified_time" content="2025-12-18T14:52:46.536Z">
+<meta property="article:author" content="heinsea">
+<meta property="article:tag" content="小说 随想 heinsea">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>吃灰的树莓派</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="蓝色风信子" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/post/cdd16eed.html"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/post/c5f84c30.html"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.heinsea.cn/post/24d0ffdc.html"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.heinsea.cn/post/24d0ffdc.html&text=吃灰的树莓派"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.heinsea.cn/post/24d0ffdc.html&title=吃灰的树莓派"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.heinsea.cn/post/24d0ffdc.html&is_video=false&description=吃灰的树莓派"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=吃灰的树莓派&body=Check out this article: https://www.heinsea.cn/post/24d0ffdc.html"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.heinsea.cn/post/24d0ffdc.html&title=吃灰的树莓派"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.heinsea.cn/post/24d0ffdc.html&title=吃灰的树莓派"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.heinsea.cn/post/24d0ffdc.html&title=吃灰的树莓派"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.heinsea.cn/post/24d0ffdc.html&title=吃灰的树莓派"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.heinsea.cn/post/24d0ffdc.html&name=吃灰的树莓派&description=&lt;p&gt;人在无聊的时候，总会喜欢翻出以前的东西看看。以前买的树莓派吃灰了好久，于是，没有需求也想创造需求，给吃灰的东西找找用途，让它看起来有点作用。&lt;/p&gt;
+&lt;p&gt;吃灰树莓派，吃灰SD卡读取器，吃灰瑕疵屏幕面板……折腾了一下午，尝试烧录系统，HDMI连接，SSH远程登录，VNC查看，镜像源配置，VS Code Server SSH登录配置，然后继续吃灰。&lt;/p&gt;
+&lt;p&gt;为了发挥作用，来创造某种需求，结果却发现自己并不需要，这其中折腾的魅力到底是倾向于结果呢？还是倾向于过程呢？为了黑苹果而黑苹果，这其中又获得了什么呢？还是说在于当时的某种体验？一种我可以和他人一样，达成某种目标的成就感？是浪费了一个下午，还是获得了某种以后可能会用到的技能？&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.heinsea.cn/post/24d0ffdc.html&t=吃灰的树莓派"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        吃灰的树莓派
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">heinsea</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-06-05T18:20:02.000Z" class="dt-published" itemprop="datePublished">2021-06-05</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>人在无聊的时候，总会喜欢翻出以前的东西看看。以前买的树莓派吃灰了好久，于是，没有需求也想创造需求，给吃灰的东西找找用途，让它看起来有点作用。</p>
+<p>吃灰树莓派，吃灰SD卡读取器，吃灰瑕疵屏幕面板……折腾了一下午，尝试烧录系统，HDMI连接，SSH远程登录，VNC查看，镜像源配置，VS Code Server SSH登录配置，然后继续吃灰。</p>
+<p>为了发挥作用，来创造某种需求，结果却发现自己并不需要，这其中折腾的魅力到底是倾向于结果呢？还是倾向于过程呢？为了黑苹果而黑苹果，这其中又获得了什么呢？还是说在于当时的某种体验？一种我可以和他人一样，达成某种目标的成就感？是浪费了一个下午，还是获得了某种以后可能会用到的技能？</p>
+<span id="more"></span>
+<p>一种奇怪的探索感？</p>
+<p>想要将对自己无用的东西变得有用，这种“有用无用”的价值观点如何决定我们自身的思维方式？一切都必须是有用的么？人为什么会因为某物无用而急躁不安？</p>
+<p>一个程序不断地堆积功能，一段已经写好的东西却不愿舍弃；不断收集着新鲜玩意，不断地在收藏夹塞满认为有用或者将来会用得上的课程；喜欢更繁杂的东西，认为价格昂贵的东西更有价值……这些对复杂事物迷恋的倾向、对简单事物感到不屑的心态到底如何操纵着我们？是认为它们更高级吗？是认为高级的事物会让我们比别人更厉害么？还是某种奇怪的攀比心？我们的心灵为什么会受这种心态控制？</p>
+<p>储物癖、囤积症，不想舍弃的原因在哪里？是“以后或许会用得上”这种想法吗？</p>
+<p>我们为什么会为了以后某个不确定得因素来牺牲现在的生活？对自己现在生活状态的不满，想要更好？对为某物重新花费代价的逃避心理？还是一种满足感？我拥有某物，这些东西都是我所拥有的，是我的财富，是我证明自己财富的某种方式？</p>
+<p>为什么我收藏这些东西会感到快乐？</p>
+<p>为什么我失去这些东西时会感到不舍？</p>
+<p>为什么我要尝试证明某物是有价值的？</p>
+<p>为什么我试图在某一样事物上添加如此多的功能？</p>
+<p>为什么会对复杂的事物迷恋，尽管简单的话会更好一点？</p>
+<p>害怕、恐惧、贪婪、攀比、尝试证明自己的欲望？对自己落后于社会的恐慌？</p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.heinsea.cn/post/24d0ffdc.html"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.heinsea.cn/post/24d0ffdc.html&text=吃灰的树莓派"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.heinsea.cn/post/24d0ffdc.html&title=吃灰的树莓派"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.heinsea.cn/post/24d0ffdc.html&is_video=false&description=吃灰的树莓派"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=吃灰的树莓派&body=Check out this article: https://www.heinsea.cn/post/24d0ffdc.html"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.heinsea.cn/post/24d0ffdc.html&title=吃灰的树莓派"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.heinsea.cn/post/24d0ffdc.html&title=吃灰的树莓派"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.heinsea.cn/post/24d0ffdc.html&title=吃灰的树莓派"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.heinsea.cn/post/24d0ffdc.html&title=吃灰的树莓派"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.heinsea.cn/post/24d0ffdc.html&name=吃灰的树莓派&description=&lt;p&gt;人在无聊的时候，总会喜欢翻出以前的东西看看。以前买的树莓派吃灰了好久，于是，没有需求也想创造需求，给吃灰的东西找找用途，让它看起来有点作用。&lt;/p&gt;
+&lt;p&gt;吃灰树莓派，吃灰SD卡读取器，吃灰瑕疵屏幕面板……折腾了一下午，尝试烧录系统，HDMI连接，SSH远程登录，VNC查看，镜像源配置，VS Code Server SSH登录配置，然后继续吃灰。&lt;/p&gt;
+&lt;p&gt;为了发挥作用，来创造某种需求，结果却发现自己并不需要，这其中折腾的魅力到底是倾向于结果呢？还是倾向于过程呢？为了黑苹果而黑苹果，这其中又获得了什么呢？还是说在于当时的某种体验？一种我可以和他人一样，达成某种目标的成就感？是浪费了一个下午，还是获得了某种以后可能会用到的技能？&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.heinsea.cn/post/24d0ffdc.html&t=吃灰的树莓派"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2025
+    heinsea
+  </div>
+  <div class="footer-left">
+    
+    
+    <li><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">鄂ICP备2020016252号</a></li>
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'heinsea/heinsea.github.io';
+      var utterances_issue_term = 'url';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>
